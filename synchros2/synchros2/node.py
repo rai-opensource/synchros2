@@ -3,10 +3,17 @@ import contextlib
 import functools
 from typing import Any, Callable, Iterable, Optional, Type
 
+try:
+    from typing import override  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import override  # type: ignore[import]
+
+
 from rclpy.callback_groups import CallbackGroup
 from rclpy.clock import Clock
 from rclpy.exceptions import InvalidHandle
 from rclpy.node import Node as BaseNode
+from rclpy.timer import Rate
 from rclpy.waitable import Waitable
 
 from synchros2.callback_groups import NonReentrantCallbackGroup
@@ -57,11 +64,12 @@ class Node(BaseNode):
         # NOTE(hidmic): this overrides the hardcoded default group in rclpy.node.Node implementation
         return self._default_callback_group_override
 
+    @override
     def create_rate(
         self,
         frequency: float,
         clock: Optional[Clock] = None,
-    ) -> SteadyRate:
+    ) -> Rate:
         """Create a Rate object.
 
         :param frequency: The frequency the Rate runs at (Hz).
@@ -71,13 +79,16 @@ class Node(BaseNode):
             clock = self.get_clock()
         return SteadyRate(frequency, clock, context=self._context)
 
-    def destroy_rate(self, rate: SteadyRate) -> bool:
+    @override
+    def destroy_rate(self, rate: Rate) -> bool:
         """Destroy a Rate object created by the node.
 
         :return: ``True`` if successful, ``False`` otherwise.
         """
-        rate.destroy()
-        return True
+        if isinstance(rate, SteadyRate):
+            rate.destroy()
+            return True
+        return super().destroy_rate(rate)
 
     @property
     def waitables(self) -> Iterable[Waitable]:

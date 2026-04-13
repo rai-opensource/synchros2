@@ -4,10 +4,16 @@ import threading
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
+try:
+    from typing import override  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import override  # type: ignore[import]
+
 from rclpy.context import Context
 from rclpy.duration import Duration
 from rclpy.exceptions import ROSInterruptException
 from rclpy.time import Time
+from rclpy.timer import Rate
 from rclpy.utilities import get_default_context
 
 
@@ -63,10 +69,12 @@ def as_proper_duration(duration: Union[int, float, timedelta, Duration]) -> Dura
     return duration
 
 
-class SteadyRate:
+class SteadyRate(Rate):
     """An rclpy.Rate equivalent that uses clock functionality directly, without timer overhead."""
 
     def __init__(self, frequency: float, clock: Time, *, context: Optional[Context] = None) -> None:
+        # NOTE: SteadyRate subclasses Rate for type consistency but does not use any of its functionality.
+        # Thus, we skip the constructor call entirely.
         self._clock = clock
         if context is None:
             context = get_default_context()
@@ -81,14 +89,17 @@ class SteadyRate:
         self._is_destroyed = False
         self._context.on_shutdown(self._on_shutdown)
 
+    @override
     def _on_shutdown(self) -> None:
         self._is_shutdown = True
         self.destroy()
 
+    @override
     def destroy(self) -> None:
         """Destroy the rate."""
         self._is_destroyed = True
 
+    @override
     def _presleep(self) -> None:
         if self._is_shutdown:
             raise ROSInterruptException()
@@ -97,6 +108,7 @@ class SteadyRate:
         with self._lock:
             self._num_sleepers += 1
 
+    @override
     def _postsleep(self) -> None:
         with self._lock:
             self._num_sleepers -= 1
@@ -110,6 +122,7 @@ class SteadyRate:
             self.destroy()
             raise ROSInterruptException()
 
+    @override
     def sleep(self) -> None:
         """Block until the current period is over."""
         self._presleep()
