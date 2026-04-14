@@ -7,7 +7,7 @@ from typing import Optional, Union
 try:
     from typing import override  # type: ignore[attr-defined]
 except ImportError:
-    from typing_extensions import override  # type: ignore[import]
+    override = lambda func: func  # noqa
 
 from rclpy.context import Context
 from rclpy.duration import Duration

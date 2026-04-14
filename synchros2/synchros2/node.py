@@ -6,8 +6,7 @@ from typing import Any, Callable, Iterable, Optional, Type
 try:
     from typing import override  # type: ignore[attr-defined]
 except ImportError:
-    from typing_extensions import override  # type: ignore[import]
-
+    override = lambda func: func  # noqa
 
 from rclpy.callback_groups import CallbackGroup
 from rclpy.clock import Clock
