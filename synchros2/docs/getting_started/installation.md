@@ -28,7 +28,7 @@ sudo apt install ros-$ROS_DISTRO-synchros2
     ```bash
     mkdir -p path/to/workspace/src  # for a new workspace
     cd path/to/workspace/src
-    git clone https://github.com/bdaiinstitute/synchros2.git
+    git clone https://github.com/rai-opensource/synchros2.git
     ```
 
 2. Install `synchros2` dependencies with `rosdep`:
