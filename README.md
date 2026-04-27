@@ -1,3 +1,24 @@
+# Repository Migration Notice
+
+> [!IMPORTANT]
+> This repository has moved to the **RAI-Opensource** GitHub organization!
+>
+> Current status: **Migrated**.
+>
+> - Migration target org: <https://github.com/RAI-Opensource>
+> - Previous target org: <https://github.com/bdaiinstitute>
+>
+> What to do now:
+>
+> - Update your git remote:
+>
+>   ```bash
+>   git remote set-url origin https://github.com/RAI-Opensource/synchros2
+>   ```
+>
+> - If you maintain downstream docs/scripts, update links from this repository to the new org.
+>
+
 # `synchros2`
 
 ![Python Support](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
