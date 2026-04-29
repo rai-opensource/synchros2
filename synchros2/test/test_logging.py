@@ -9,7 +9,7 @@ from rclpy.clock import ROSClock
 from rclpy.time import Time
 
 from synchros2.futures import unwrap_future
-from synchros2.logging import LoggingSeverity, logs_to_ros
+from synchros2.logging import LoggingSeverity, clear_logging_caches, logs_to_ros
 from synchros2.scope import ROSAwareScope
 from synchros2.subscription import Subscription
 
@@ -29,6 +29,7 @@ def test_memoizing_logger(verbose_ros: ROSAwareScope) -> None:
 
     logger = verbose_ros.node.get_logger()
     logger.set_level(LoggingSeverity.INFO)
+    clear_logging_caches()  # ensure no interference from previous tests
 
     assert not logger.debug("Debug message should not be logged")
 
