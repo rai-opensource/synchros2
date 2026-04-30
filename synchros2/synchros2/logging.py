@@ -93,6 +93,14 @@ def make_logging_function(
     return log
 
 
+def clear_logging_caches() -> None:
+    """Clears the caches of memoized logging functions.
+
+    This is useful for testing purposes, to avoid interference between tests due to cached logging functions.
+    """
+    make_logging_function.cache_clear()
+
+
 class MemoizingRcutilsLogger:
     """An alternative, more efficient implementation of RcutilsLogger.
 
