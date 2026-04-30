@@ -86,8 +86,7 @@ def test_existing_transform(ros: ROSAwareScope, tf_pair: Tuple[MockTfPublisherNo
     timestamp = ros.node.get_clock().now()
     trans = Transform(translation=Vector3(x=1.0, y=2.0, z=3.0), rotation=Quaternion(w=1.0, x=0.0, y=0.0, z=0.0))
     tf_publisher.publish_transform(trans, timestamp)
-    time.sleep(0.2)
-    t = tf_listener.lookup_a_tform_b(FRAME_ID, CHILD_FRAME_ID, timestamp)
+    t = tf_listener.lookup_a_tform_b(FRAME_ID, CHILD_FRAME_ID, timestamp, timeout_sec=10.0, wait_for_frames=True)
     assert equal_transform(t.transform, trans)
 
 
